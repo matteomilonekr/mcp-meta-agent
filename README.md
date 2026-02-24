@@ -35,16 +35,6 @@ export META_ACCESS_TOKEN="il_tuo_token"
 # Opzionale (per flussi OAuth)
 export META_APP_ID="il_tuo_app_id"
 export META_APP_SECRET="il_tuo_app_secret"
-
-# Per analisi creative (immagini e video via OpenRouter)
-export OPENROUTER_API_KEY="la_tua_chiave_openrouter"
-```
-
-Oppure crea un file `.env` nella root del progetto:
-
-```env
-META_ACCESS_TOKEN=il_tuo_token
-OPENROUTER_API_KEY=la_tua_chiave_openrouter
 ```
 
 ### 3. Avvio
@@ -213,65 +203,6 @@ generate_auth_url → apri nel browser → exchange_code_for_token → refresh_t
 |------|-------------|
 | `list_ad_accounts` | Lista tutti gli account pubblicitari accessibili |
 | `health_check` | Controllo connettivita server + API |
-
-## Skills Claude Integrate
-
-Oltre ai 36 tool MCP, il sistema include skills Claude per analisi avanzata e intelligence pubblicitaria.
-
-### Skills Ads (Gestione e Strategia)
-
-| Skill | Descrizione |
-|-------|-------------|
-| `/ads:spy` | Spia le ads dei competitor |
-| `/ads:deep-dive` | Analisi approfondita di una campagna |
-| `/ads:launch` | Lancia una nuova campagna |
-| `/ads:scale` | Scala una campagna performante |
-| `/ads:optimize` | Ottimizza campagne esistenti |
-| `/ads:audit-social` | Audit completo social ads |
-| `/ads:health-check` | Controllo salute campagne |
-| `/ads:creative-brief` | Genera brief creativi |
-| `/ads:plan-campaign` | Pianifica una nuova campagna |
-| `/ads:build-audience` | Costruisci audience targetizzate |
-| `/ads:client-report` | Genera report per clienti |
-| `/ads:influencer` | Analisi influencer per collaborazioni |
-| `/ads:content-ideas` | Genera idee contenuto per ads |
-| `/ads:spy` | Spia competitor singolo |
-| `/ads:team-spy` | Spia competitor in team |
-| `/ads:team-strategy` | Strategia ads in team |
-| `/ads:team-launch` | Lancio campagna in team |
-| `/ads:team-audit` | Audit in team |
-| `/ads:help` | Guida skills ads |
-
-### Skills Analisi (Organic e Paid)
-
-| Skill | Descrizione |
-|-------|-------------|
-| `/organic-analysis` | Analisi performance organica |
-| `/paid-analysis` | Analisi performance paid |
-| `/competitor-intelligence` | Intelligence competitiva completa |
-| `/creative-intelligence` | Analisi intelligence creativita |
-| `/campaign-planner` | Pianificatore campagne avanzato |
-| `/audience-builder` | Costruttore audience avanzato |
-
-### Skills Social Scraping
-
-| Piattaforma | Skills | Descrizione |
-|-------------|--------|-------------|
-| **Instagram** | 12 | Profilo, post, reels, hashtag, location, commenti, follower, following, stories, highlights, dettagli post, trascrizioni |
-| **TikTok** | 12 | Profilo, video, trending, ricerca, hashtag, sound, commenti, follower, following, demografia, livestream, trascrizioni |
-| **YouTube** | 11 | Canale, video, dettagli video, trending, ricerca, commenti, playlist, video playlist, playlist canale, correlati, trascrizioni |
-| **LinkedIn** | 8 | Profilo, azienda, post, post azienda, commenti, ricerca persone, ricerca aziende, job, ricerca ads |
-| **Twitter/X** | 6 | Profilo, post, ricerca, ricerca utenti, trending, trascrizioni |
-| **Facebook** | 8 | Profilo, pagina, post, gruppo, marketplace, eventi, recensioni, ricerca ads |
-| **Reddit** | 5 | Ricerca, subreddit dettagli, subreddit ricerca, commenti post, subreddit post |
-| **Threads** | 5 | Profilo, post utente, post singolo, ricerca utenti |
-| **Pinterest** | 4 | Pin, board utente, ricerca, board |
-| **Amazon** | 3 | Prodotti, recensioni, ricerca |
-| **TikTok Shop** | 2 | Prodotti, ricerca |
-| **Truth Social** | 2 | Profilo, post |
-| **Altre** | 6 | Twitch, Kick, Snapchat, Bluesky, Linktree, Linkbio, Pillar, Komi |
-
-**87 skills di scraping totali** su 15+ piattaforme social.
 
 ## Architettura
 
