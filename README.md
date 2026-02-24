@@ -81,6 +81,37 @@ Aggiungi al file `~/.config/claude/claude_desktop_config.json`:
 }
 ```
 
+### 5. Installazione da GitHub (senza clonare)
+
+Se non vuoi clonare il repo, puoi installare ed eseguire direttamente da GitHub con `uvx`:
+
+#### Claude Code (CLI)
+
+```json
+{
+  "mcpServers": {
+    "meta-ads": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/matteomilonekr/meta-ads-manager.git", "meta-ads-manager"],
+      "env": {
+        "META_ACCESS_TOKEN": "il_tuo_token"
+      }
+    }
+  }
+}
+```
+
+#### Claude Desktop
+
+Stessa configurazione nel file `~/.config/claude/claude_desktop_config.json`.
+
+#### Installazione manuale da GitHub
+
+```bash
+pip install git+https://github.com/matteomilonekr/meta-ads-manager.git
+meta-ads-manager
+```
+
 ## Ottenere un Token Meta
 
 1. Vai su [Meta for Developers](https://developers.facebook.com/)
