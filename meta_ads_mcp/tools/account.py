@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import json
+import logging
 
 from mcp.server.fastmcp import Context
+
+logger = logging.getLogger(__name__)
 
 from meta_ads_mcp.server import mcp
 from meta_ads_mcp.tools._helpers import get_client, safe_get
@@ -69,6 +72,7 @@ async def health_check(ctx: Context = None) -> str:
             f"- **API Version**: v23.0"
         )
     except Exception as exc:
+        logger.error("Health check failed: %s", exc)
         return (
             f"## Server Health\n\n"
             f"- **Status**: Unhealthy\n"

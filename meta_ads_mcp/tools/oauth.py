@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import json
+import logging
 
 from mcp.server.fastmcp import Context
+
+logger = logging.getLogger(__name__)
 
 from meta_ads_mcp.server import mcp
 from meta_ads_mcp.tools._helpers import get_client, get_auth
@@ -157,4 +160,5 @@ async def validate_token(ctx: Context = None) -> str:
         user_id = result.get("id", "Unknown")
         return f"Token is valid. User: **{name}** (ID: {user_id})"
     except Exception as exc:
+        logger.error("Token validation failed: %s", exc)
         return f"Token is **invalid** or expired: {exc}"

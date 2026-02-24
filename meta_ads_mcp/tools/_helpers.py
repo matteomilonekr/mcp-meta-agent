@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 from mcp.server.fastmcp import Context
+
+logger = logging.getLogger(__name__)
 
 from meta_ads_mcp.client import MetaAdsClient
 from meta_ads_mcp.auth import AuthManager

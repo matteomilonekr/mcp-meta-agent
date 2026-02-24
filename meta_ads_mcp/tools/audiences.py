@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import json
+import logging
 
 from mcp.server.fastmcp import Context
+
+logger = logging.getLogger(__name__)
 
 from meta_ads_mcp.models.common import DEFAULT_AUDIENCE_FIELDS, AudienceSubtype
 from meta_ads_mcp.server import mcp

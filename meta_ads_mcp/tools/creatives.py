@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import json
+import logging
 
 from mcp.server.fastmcp import Context
+
+logger = logging.getLogger(__name__)
 
 from meta_ads_mcp.models.common import DEFAULT_CREATIVE_FIELDS, META_GRAPH_URL
 from meta_ads_mcp.server import mcp
@@ -150,16 +153,33 @@ async def upload_image(
     """Upload an image from URL to Meta for use in ad creatives.
 
     Returns the image hash needed for create_creative.
+    Tries URL upload first, falls back to downloading and uploading as base64 bytes.
 
     Args:
         account_id: Ad account ID.
         image_url: Public URL of the image to upload.
     """
+    import base64
+    import httpx as _httpx
+
     client = get_client(ctx)
     act_id = normalize_account_id(account_id)
 
-    payload = {"url": image_url}
-    result = await client.post(f"{act_id}/adimages", data=payload, account_id=act_id)
+    # Try URL-based upload first
+    try:
+        result = await client.post(f"{act_id}/adimages", data={"url": image_url}, account_id=act_id)
+    except Exception as url_err:
+        # Fallback: download image and upload as base64 bytes
+        logger.warning("URL upload failed (%s), falling back to bytes upload", url_err)
+        try:
+            async with _httpx.AsyncClient(timeout=30.0) as http:
+                img_resp = await http.get(image_url, follow_redirects=True)
+                img_resp.raise_for_status()
+                b64 = base64.b64encode(img_resp.content).decode()
+            result = await client.post(f"{act_id}/adimages", data={"bytes": b64}, account_id=act_id)
+        except Exception as bytes_err:
+            logger.error("Image upload failed (both url and bytes): %s", bytes_err)
+            return f"Error uploading image: {bytes_err}"
 
     images = result.get("images", {})
     if images:

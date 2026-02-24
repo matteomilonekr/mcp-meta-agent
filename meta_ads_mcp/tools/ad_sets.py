@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import json
+import logging
 
 from mcp.server.fastmcp import Context
+
+logger = logging.getLogger(__name__)
 
 from meta_ads_mcp.models.common import (
     DEFAULT_ADSET_FIELDS,
@@ -126,8 +129,8 @@ async def create_ad_set(
             campaign_data.get("daily_budget") or campaign_data.get("lifetime_budget")
         )
         uses_cbo = campaign_data.get("budget_rebalance_flag", False) or has_campaign_budget
-    except Exception:
-        pass  # If lookup fails, proceed with user-supplied values
+    except Exception as exc:
+        logger.warning("CBO check failed for campaign %s: %s", campaign_id, exc)
 
     payload: dict = {
         "campaign_id": campaign_id,
