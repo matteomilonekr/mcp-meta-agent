@@ -26,7 +26,7 @@ dependencies = [
 meta-ads-manager = "meta_ads_mcp.server:main"
 
 [project.urls]
-Homepage = "https://github.com/matteomilone/meta-ads-manager"
+Homepage = "https://github.com/matteomilonekr/meta-ads-manager"
 
 [project.optional-dependencies]
 dev = [
@@ -39,6 +39,9 @@ dev = [
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["meta_ads_mcp"]
 
 [build-system]
 requires = ["hatchling"]
