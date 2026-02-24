@@ -5,6 +5,17 @@ from __future__ import annotations
 from typing import Any
 
 
+CURRENCY_SYMBOLS: dict[str, str] = {
+    "USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥", "CNY": "¥",
+    "CHF": "CHF", "CAD": "CA$", "AUD": "A$", "BRL": "R$", "INR": "₹",
+}
+
+
+def currency_symbol(currency: str) -> str:
+    """Return the symbol for a currency code, or the code itself."""
+    return CURRENCY_SYMBOLS.get(currency, currency + " ")
+
+
 def format_currency(amount_cents: int | float | str, currency: str = "USD") -> str:
     """Format a cent/micro amount as currency.
 

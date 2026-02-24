@@ -147,6 +147,7 @@ class InsightsBreakdown(str, Enum):
 
 # Default fields for insights queries
 DEFAULT_INSIGHTS_FIELDS = [
+    "account_currency",
     "impressions",
     "clicks",
     "spend",

@@ -20,6 +20,7 @@ from meta_ads_mcp.models.common import (
 from meta_ads_mcp.server import mcp
 from meta_ads_mcp.tools._helpers import get_client, safe_get
 from meta_ads_mcp.utils.formatting import (
+    currency_symbol,
     format_currency,
     format_number,
     format_percentage,
@@ -61,7 +62,7 @@ def _build_insights_params(
     return params
 
 
-def _format_insight_row(row: dict) -> dict:
+def _format_insight_row(row: dict, sym: str = "$") -> dict:
     """Format a single insight row for display."""
     spend = safe_get(row, "spend", "0")
     actions = row.get("actions", [])
@@ -73,10 +74,10 @@ def _format_insight_row(row: dict) -> dict:
     return {
         "impressions": format_number(safe_get(row, "impressions", 0)),
         "clicks": format_number(safe_get(row, "clicks", 0)),
-        "spend": f"${float(spend):,.2f}" if spend else "$0.00",
+        "spend": f"{sym}{float(spend):,.2f}" if spend else f"{sym}0.00",
         "ctr": format_percentage(safe_get(row, "ctr")),
-        "cpc": f"${float(safe_get(row, 'cpc', 0)):,.2f}",
-        "cpm": f"${float(safe_get(row, 'cpm', 0)):,.2f}",
+        "cpc": f"{sym}{float(safe_get(row, 'cpc', 0)):,.2f}",
+        "cpm": f"{sym}{float(safe_get(row, 'cpm', 0)):,.2f}",
         "reach": format_number(safe_get(row, "reach", 0)),
         "frequency": f"{float(safe_get(row, 'frequency', 0)):.2f}",
         "conversions": str(conversions),
@@ -123,7 +124,8 @@ async def get_insights(
     if response_format == "json":
         return json.dumps({"insights": data}, indent=2, ensure_ascii=False)
 
-    rows = [_format_insight_row(row) for row in data]
+    sym = currency_symbol(data[0].get("account_currency", "USD"))
+    rows = [_format_insight_row(row, sym) for row in data]
     columns = ["impressions", "clicks", "spend", "ctr", "cpc", "cpm", "reach", "conversions"]
     headers = {
         "impressions": "Impr.", "clicks": "Clicks", "spend": "Spend",
@@ -333,13 +335,14 @@ async def get_attribution_data(
         return json.dumps({"attribution": data}, indent=2, ensure_ascii=False)
 
     row = data[0]
+    sym = currency_symbol(row.get("account_currency", "USD"))
     actions = row.get("actions", [])
     summary_lines = [
         f"## Attribution Data for `{object_id}` ({date_preset})",
         "",
         f"- **Impressions**: {format_number(safe_get(row, 'impressions', 0))}",
         f"- **Clicks**: {format_number(safe_get(row, 'clicks', 0))}",
-        f"- **Spend**: ${float(safe_get(row, 'spend', 0)):,.2f}",
+        f"- **Spend**: {sym}{float(safe_get(row, 'spend', 0)):,.2f}",
         "",
         "### Actions by Type",
         "",
