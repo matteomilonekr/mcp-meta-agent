@@ -1,9 +1,9 @@
 [project]
-name = "meta-ads-mcp"
+name = "meta-ads-manager"
 version = "1.0.0"
 description = "MCP Server for Meta/Facebook Ads API — manage campaigns, analytics, audiences, and creatives from Claude"
 requires-python = ">=3.12"
-license = "MIT"
+license = "LicenseRef-Proprietary"
 authors = [
     { name = "Matteo Milone" },
 ]
@@ -11,7 +11,7 @@ keywords = ["mcp", "meta", "facebook", "ads", "claude", "model-context-protocol"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
+    "License :: Other/Proprietary License",
     "Topic :: Software Development :: Libraries",
 ]
 readme = "README.md"
@@ -23,10 +23,10 @@ dependencies = [
 ]
 
 [project.scripts]
-meta-ads-mcp = "meta_ads_mcp.server:main"
+meta-ads-manager = "meta_ads_mcp.server:main"
 
 [project.urls]
-Homepage = "https://github.com/matteomilone/meta-ads-mcp"
+Homepage = "https://github.com/matteomilone/meta-ads-manager"
 
 [project.optional-dependencies]
 dev = [

@@ -1,51 +1,53 @@
-# Meta Ads MCP Server
+# Meta Ads Manager MCP
 
-MCP (Model Context Protocol) server for Meta/Facebook Ads API. Manage campaigns, analytics, audiences, and creatives directly from Claude.
+Server MCP (Model Context Protocol) per le API Meta/Facebook Ads. Gestisci campagne, analytics, audience e creativita direttamente da Claude.
 
-By **Matteo Milone**. Full async support, typed models, and 36 tools for complete Meta Ads management.
+Di **Matteo Milone**. Supporto async completo, modelli tipizzati e 36 tool per la gestione completa di Meta Ads.
 
-## Features
+## Funzionalita
 
-| Category | Tools | Description |
-|----------|-------|-------------|
-| **Campaigns** | 6 | List, create, update, pause, resume, delete |
-| **Ad Sets** | 5 | List, create, update, pause, delete |
-| **Ads** | 4 | List, create, update, delete |
-| **Analytics** | 5 | Insights, compare (parallel), export CSV/JSON, daily trends, attribution |
-| **Audiences** | 5 | Custom, lookalike, estimate size, delete |
-| **Creatives** | 4 | List, create, upload image, preview |
-| **OAuth** | 5 | Auth URL, code exchange, long-lived token, token info, validate |
-| **Account** | 2 | List ad accounts, health check |
+| Categoria | Tool | Descrizione |
+|-----------|------|-------------|
+| **Campagne** | 6 | Lista, crea, aggiorna, pausa, riprendi, elimina |
+| **Gruppi di inserzioni** | 5 | Lista, crea, aggiorna, pausa, elimina |
+| **Inserzioni** | 4 | Lista, crea, aggiorna, elimina |
+| **Analytics** | 5 | Insights, confronto (parallelo), export CSV/JSON, trend giornalieri, attribuzione |
+| **Audience** | 5 | Custom, lookalike, stima dimensione, elimina |
+| **Creativita** | 4 | Lista, crea, carica immagine, anteprima |
+| **OAuth** | 5 | URL auth, scambio codice, token long-lived, info token, validazione |
+| **Account** | 2 | Lista account pubblicitari, health check |
 
-**36 tools total.**
+**36 tool in totale.**
 
-## Quick Start
+## Guida Rapida
 
-### 1. Install
+### 1. Installazione
 
 ```bash
 pip install -e .
 ```
 
-### 2. Configure
+### 2. Configurazione
 
 ```bash
-export META_ACCESS_TOKEN="your_token_here"
+export META_ACCESS_TOKEN="il_tuo_token"
 
-# Optional (for OAuth flows)
-export META_APP_ID="your_app_id"
-export META_APP_SECRET="your_app_secret"
+# Opzionale (per flussi OAuth)
+export META_APP_ID="il_tuo_app_id"
+export META_APP_SECRET="il_tuo_app_secret"
 ```
 
-### 3. Run
+### 3. Avvio
 
 ```bash
 python -m meta_ads_mcp.server
 ```
 
-### 4. Connect to Claude
+### 4. Collegamento a Claude
 
-Add to your Claude Desktop config (`~/.config/claude/claude_desktop_config.json`):
+#### Claude Code (CLI)
+
+Aggiungi al file di configurazione `~/.claude.json`:
 
 ```json
 {
@@ -54,115 +56,192 @@ Add to your Claude Desktop config (`~/.config/claude/claude_desktop_config.json`
       "command": "python",
       "args": ["-m", "meta_ads_mcp.server"],
       "env": {
-        "META_ACCESS_TOKEN": "your_token_here"
+        "META_ACCESS_TOKEN": "il_tuo_token"
       }
     }
   }
 }
 ```
 
-## Getting a Meta Access Token
+#### Claude Desktop
 
-1. Go to [Meta for Developers](https://developers.facebook.com/)
-2. Create an app (Business type)
-3. Add **Marketing API** product
-4. Generate a User Access Token with `ads_management` and `ads_read` permissions
-5. Use `refresh_to_long_lived_token` tool to extend it to 60 days
+Aggiungi al file `~/.config/claude/claude_desktop_config.json`:
 
-Or use the built-in OAuth tools:
+```json
+{
+  "mcpServers": {
+    "meta-ads": {
+      "command": "python",
+      "args": ["-m", "meta_ads_mcp.server"],
+      "env": {
+        "META_ACCESS_TOKEN": "il_tuo_token"
+      }
+    }
+  }
+}
+```
+
+## Ottenere un Token Meta
+
+1. Vai su [Meta for Developers](https://developers.facebook.com/)
+2. Crea un'app (tipo Business)
+3. Aggiungi il prodotto **Marketing API**
+4. Genera un User Access Token con permessi `ads_management` e `ads_read`
+5. Usa il tool `refresh_to_long_lived_token` per estenderlo a 60 giorni
+
+Oppure usa i tool OAuth integrati:
 
 ```
-generate_auth_url → open in browser → exchange_code_for_token → refresh_to_long_lived_token
+generate_auth_url → apri nel browser → exchange_code_for_token → refresh_to_long_lived_token
 ```
 
-## Tools Reference
+## Riferimento Tool MCP
 
-### Campaigns
+### Campagne
 
-| Tool | Description |
+| Tool | Descrizione |
 |------|-------------|
-| `list_campaigns` | List campaigns with status/objective filters |
-| `create_campaign` | Create campaign (PAUSED by default) |
-| `update_campaign` | Update name, status, budget, schedule |
-| `pause_campaign` | Pause a campaign |
-| `resume_campaign` | Activate a paused campaign |
-| `delete_campaign` | Delete a campaign |
+| `list_campaigns` | Lista campagne con filtri stato/obiettivo |
+| `create_campaign` | Crea campagna (PAUSED di default) |
+| `update_campaign` | Aggiorna nome, stato, budget, pianificazione |
+| `pause_campaign` | Metti in pausa una campagna |
+| `resume_campaign` | Attiva una campagna in pausa |
+| `delete_campaign` | Elimina una campagna |
 
-### Ad Sets
+### Gruppi di Inserzioni
 
-| Tool | Description |
+| Tool | Descrizione |
 |------|-------------|
-| `list_ad_sets` | List ad sets by account or campaign |
-| `create_ad_set` | Create ad set with targeting, budget, optimization |
-| `update_ad_set` | Update targeting, budget, schedule |
-| `pause_ad_set` | Pause an ad set |
-| `delete_ad_set` | Delete an ad set |
+| `list_ad_sets` | Lista gruppi per account o campagna |
+| `create_ad_set` | Crea gruppo con targeting, budget, ottimizzazione |
+| `update_ad_set` | Aggiorna targeting, budget, pianificazione |
+| `pause_ad_set` | Metti in pausa un gruppo |
+| `delete_ad_set` | Elimina un gruppo |
 
-### Ads
+### Inserzioni
 
-| Tool | Description |
+| Tool | Descrizione |
 |------|-------------|
-| `list_ads` | List ads by account, campaign, or ad set |
-| `create_ad` | Create ad linking creative to ad set |
-| `update_ad` | Update ad status/name/creative |
-| `delete_ad` | Delete an ad |
+| `list_ads` | Lista inserzioni per account, campagna o gruppo |
+| `create_ad` | Crea inserzione collegando creativita a gruppo |
+| `update_ad` | Aggiorna stato/nome/creativita |
+| `delete_ad` | Elimina un'inserzione |
 
 ### Analytics
 
-| Tool | Description |
+| Tool | Descrizione |
 |------|-------------|
-| `get_insights` | Performance metrics with date ranges and breakdowns |
-| `compare_performance` | Compare multiple objects side-by-side (async parallel) |
-| `export_insights` | Export data as CSV or JSON |
-| `get_daily_trends` | Daily breakdown with trend direction |
-| `get_attribution_data` | Attribution window analysis |
+| `get_insights` | Metriche performance con intervalli date e breakdown |
+| `compare_performance` | Confronta piu oggetti affiancati (async parallelo) |
+| `export_insights` | Esporta dati in CSV o JSON |
+| `get_daily_trends` | Breakdown giornaliero con direzione trend |
+| `get_attribution_data` | Analisi finestra di attribuzione |
 
-### Audiences
+### Audience
 
-| Tool | Description |
+| Tool | Descrizione |
 |------|-------------|
-| `list_audiences` | List custom/lookalike audiences |
-| `create_custom_audience` | Create custom audience (website, app, video, etc.) |
-| `create_lookalike` | Create lookalike from source audience |
-| `estimate_audience_size` | Estimate reach for targeting spec |
-| `delete_audience` | Delete an audience |
+| `list_audiences` | Lista audience custom/lookalike |
+| `create_custom_audience` | Crea audience custom (sito web, app, video, ecc.) |
+| `create_lookalike` | Crea lookalike da audience sorgente |
+| `estimate_audience_size` | Stima copertura per specifiche di targeting |
+| `delete_audience` | Elimina un'audience |
 
-### Creatives
+### Creativita
 
-| Tool | Description |
+| Tool | Descrizione |
 |------|-------------|
-| `list_creatives` | List ad creatives |
-| `create_creative` | Create with image/video and CTA |
-| `upload_image` | Upload image from URL, returns hash |
-| `preview_ad` | Preview creative in various formats |
+| `list_creatives` | Lista creativita pubblicitarie |
+| `create_creative` | Crea con immagine/video e CTA |
+| `upload_image` | Carica immagine da URL, restituisce hash |
+| `preview_ad` | Anteprima creativita in vari formati |
 
 ### OAuth
 
-| Tool | Description |
+| Tool | Descrizione |
 |------|-------------|
-| `generate_auth_url` | Generate Facebook OAuth URL |
-| `exchange_code_for_token` | Exchange auth code for access token |
-| `refresh_to_long_lived_token` | Convert to 60-day token |
-| `get_token_info` | Token validity, scopes, expiry |
-| `validate_token` | Quick token validation |
+| `generate_auth_url` | Genera URL OAuth Facebook |
+| `exchange_code_for_token` | Scambia codice auth per access token |
+| `refresh_to_long_lived_token` | Converti in token 60 giorni |
+| `get_token_info` | Validita token, scope, scadenza |
+| `validate_token` | Validazione rapida token |
 
 ### Account
 
-| Tool | Description |
+| Tool | Descrizione |
 |------|-------------|
-| `list_ad_accounts` | List all accessible ad accounts |
-| `health_check` | Server + API connectivity check |
+| `list_ad_accounts` | Lista tutti gli account pubblicitari accessibili |
+| `health_check` | Controllo connettivita server + API |
 
-## Architecture
+## Skills Claude Integrate
+
+Oltre ai 36 tool MCP, il sistema include skills Claude per analisi avanzata e intelligence pubblicitaria.
+
+### Skills Ads (Gestione e Strategia)
+
+| Skill | Descrizione |
+|-------|-------------|
+| `/ads:spy` | Spia le ads dei competitor |
+| `/ads:deep-dive` | Analisi approfondita di una campagna |
+| `/ads:launch` | Lancia una nuova campagna |
+| `/ads:scale` | Scala una campagna performante |
+| `/ads:optimize` | Ottimizza campagne esistenti |
+| `/ads:audit-social` | Audit completo social ads |
+| `/ads:health-check` | Controllo salute campagne |
+| `/ads:creative-brief` | Genera brief creativi |
+| `/ads:plan-campaign` | Pianifica una nuova campagna |
+| `/ads:build-audience` | Costruisci audience targetizzate |
+| `/ads:client-report` | Genera report per clienti |
+| `/ads:influencer` | Analisi influencer per collaborazioni |
+| `/ads:content-ideas` | Genera idee contenuto per ads |
+| `/ads:spy` | Spia competitor singolo |
+| `/ads:team-spy` | Spia competitor in team |
+| `/ads:team-strategy` | Strategia ads in team |
+| `/ads:team-launch` | Lancio campagna in team |
+| `/ads:team-audit` | Audit in team |
+| `/ads:help` | Guida skills ads |
+
+### Skills Analisi (Organic e Paid)
+
+| Skill | Descrizione |
+|-------|-------------|
+| `/organic-analysis` | Analisi performance organica |
+| `/paid-analysis` | Analisi performance paid |
+| `/competitor-intelligence` | Intelligence competitiva completa |
+| `/creative-intelligence` | Analisi intelligence creativita |
+| `/campaign-planner` | Pianificatore campagne avanzato |
+| `/audience-builder` | Costruttore audience avanzato |
+
+### Skills Social Scraping
+
+| Piattaforma | Skills | Descrizione |
+|-------------|--------|-------------|
+| **Instagram** | 12 | Profilo, post, reels, hashtag, location, commenti, follower, following, stories, highlights, dettagli post, trascrizioni |
+| **TikTok** | 12 | Profilo, video, trending, ricerca, hashtag, sound, commenti, follower, following, demografia, livestream, trascrizioni |
+| **YouTube** | 11 | Canale, video, dettagli video, trending, ricerca, commenti, playlist, video playlist, playlist canale, correlati, trascrizioni |
+| **LinkedIn** | 8 | Profilo, azienda, post, post azienda, commenti, ricerca persone, ricerca aziende, job, ricerca ads |
+| **Twitter/X** | 6 | Profilo, post, ricerca, ricerca utenti, trending, trascrizioni |
+| **Facebook** | 8 | Profilo, pagina, post, gruppo, marketplace, eventi, recensioni, ricerca ads |
+| **Reddit** | 5 | Ricerca, subreddit dettagli, subreddit ricerca, commenti post, subreddit post |
+| **Threads** | 5 | Profilo, post utente, post singolo, ricerca utenti |
+| **Pinterest** | 4 | Pin, board utente, ricerca, board |
+| **Amazon** | 3 | Prodotti, recensioni, ricerca |
+| **TikTok Shop** | 2 | Prodotti, ricerca |
+| **Truth Social** | 2 | Profilo, post |
+| **Altre** | 6 | Twitch, Kick, Snapchat, Bluesky, Linktree, Linkbio, Pillar, Komi |
+
+**87 skills di scraping totali** su 15+ piattaforme social.
+
+## Architettura
 
 ```
 meta_ads_mcp/
-├── server.py          # FastMCP server with lifespan
-├── client.py          # Async httpx client (retry + rate limiting)
-├── auth.py            # Token management, OAuth flows
+├── server.py          # Server FastMCP con lifespan
+├── client.py          # Client httpx async (retry + rate limiting)
+├── auth.py            # Gestione token, flussi OAuth
 ├── models/
-│   └── common.py      # Enums, constants, field defaults
-├── tools/             # 36 MCP tools (8 modules)
+│   └── common.py      # Enum, costanti, valori default
+├── tools/             # 36 tool MCP (8 moduli)
 │   ├── campaigns.py
 │   ├── ad_sets.py
 │   ├── ads.py
@@ -172,33 +251,33 @@ meta_ads_mcp/
 │   ├── oauth.py
 │   └── account.py
 └── utils/
-    ├── errors.py      # Typed error hierarchy
-    ├── rate_limiter.py # Per-account scoring system
-    ├── pagination.py   # Cursor + URL pagination
-    └── formatting.py   # Markdown tables, currency
+    ├── errors.py      # Gerarchia errori tipizzati
+    ├── rate_limiter.py # Sistema scoring per account
+    ├── pagination.py   # Paginazione cursor + URL
+    └── formatting.py   # Tabelle Markdown, valute
 ```
 
-## Tech Stack
+## Stack Tecnologico
 
 - **Python 3.12+**
-- **FastMCP** — MCP server framework
-- **httpx** — Async HTTP client
-- **Pydantic v2** — Input validation
+- **FastMCP** — Framework server MCP
+- **httpx** — Client HTTP async
+- **Pydantic v2** — Validazione input
 - **Meta Graph API v23.0**
 
-## Development
+## Sviluppo
 
 ```bash
-# Install with dev dependencies
+# Installa con dipendenze dev
 pip install -e ".[dev]"
 
-# Run tests
+# Esegui test
 pytest -v
 
-# Run with coverage
+# Esegui con coverage
 pytest --cov=meta_ads_mcp --cov-report=term-missing
 ```
 
-## License
+## Licenza
 
-MIT
+Proprietary - Copyright © 2026 Matteo Milone. Tutti i diritti riservati. Vedi [LICENSE.md](LICENSE.md).
