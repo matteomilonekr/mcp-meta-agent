@@ -122,11 +122,22 @@ async def create_creative(
         if description:
             video_data["description"] = description
         story_spec["video_data"] = video_data
+    elif link:
+        # Link ad without image — Meta requires link_data with a valid link
+        link_data = {
+            "link": link,
+            "call_to_action": {"type": call_to_action_type, "value": {"link": link}},
+        }
+        if message:
+            link_data["message"] = message
+        if headline:
+            link_data["name"] = headline
+        if description:
+            link_data["description"] = description
+        story_spec["link_data"] = link_data
     elif message:
-        # Text-only post
+        # Text-only post (no link) — still needs link_data wrapper for Meta API
         story_spec["link_data"] = {"message": message}
-        if link:
-            story_spec["link_data"]["link"] = link
 
     payload = {
         "name": name,

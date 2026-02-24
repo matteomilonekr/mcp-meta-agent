@@ -94,6 +94,7 @@ async def create_ad_set(
     end_time: str | None = None,
     targeting: Any | None = None,
     promoted_object: Any | None = None,
+    destination_type: str | None = None,
     ctx: Context = None,
 ) -> str:
     """Create a new ad set within a campaign.
@@ -111,6 +112,7 @@ async def create_ad_set(
         end_time: ISO 8601 end time (required for lifetime budget).
         targeting: JSON string with targeting spec (e.g. '{"geo_locations":{"countries":["US"]},"age_min":25,"age_max":55}').
         promoted_object: JSON string with promoted object (e.g. '{"page_id":"123456"}').
+        destination_type: Where traffic is sent: WEBSITE, APP, MESSAGING, INSTAGRAM_DIRECT, SHOP, ON_AD, etc. Auto-detected from campaign objective if not provided.
     """
     client = get_client(ctx)
     act_id = normalize_account_id(account_id)
@@ -118,20 +120,21 @@ async def create_ad_set(
     OptimizationGoal(optimization_goal)
     BillingEvent(billing_event)
 
-    # Check if campaign uses CBO (Campaign Budget Optimization).
-    # When CBO is active, budget is managed at campaign level — passing
-    # daily_budget or lifetime_budget at ad-set level causes an API error.
+    # Fetch campaign info for CBO check and objective-based defaults.
     uses_cbo = False
+    campaign_objective = None
     try:
         campaign_data = await client.get(
-            campaign_id, params={"fields": "budget_rebalance_flag,daily_budget,lifetime_budget"},
+            campaign_id,
+            params={"fields": "budget_rebalance_flag,daily_budget,lifetime_budget,objective"},
         )
         has_campaign_budget = bool(
             campaign_data.get("daily_budget") or campaign_data.get("lifetime_budget")
         )
         uses_cbo = campaign_data.get("budget_rebalance_flag", False) or has_campaign_budget
+        campaign_objective = campaign_data.get("objective")
     except Exception as exc:
-        logger.warning("CBO check failed for campaign %s: %s", campaign_id, exc)
+        logger.warning("Campaign check failed for %s: %s", campaign_id, exc)
 
     payload: dict = {
         "campaign_id": campaign_id,
@@ -168,6 +171,21 @@ async def create_ad_set(
         elif isinstance(promoted_object, str):
             json.loads(promoted_object)  # validate JSON
         payload["promoted_object"] = promoted_object
+
+    # destination_type is required for most campaign objectives.
+    # Auto-detect from objective when not explicitly provided.
+    _OBJECTIVE_DESTINATION_DEFAULTS = {
+        "OUTCOME_TRAFFIC": "WEBSITE",
+        "OUTCOME_SALES": "WEBSITE",
+        "OUTCOME_LEADS": "WEBSITE",
+        "OUTCOME_ENGAGEMENT": "ON_AD",
+        "OUTCOME_AWARENESS": "ON_AD",
+        "OUTCOME_APP_PROMOTION": "APP",
+    }
+    if destination_type:
+        payload["destination_type"] = destination_type
+    elif campaign_objective and campaign_objective in _OBJECTIVE_DESTINATION_DEFAULTS:
+        payload["destination_type"] = _OBJECTIVE_DESTINATION_DEFAULTS[campaign_objective]
 
     result = await client.post(f"{act_id}/adsets", data=payload, account_id=act_id)
     adset_id = result.get("id", "unknown")

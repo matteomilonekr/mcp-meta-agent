@@ -65,17 +65,18 @@ def classify_meta_error(error_data: dict) -> MetaAdsMCPError:
     if code in (4, 17, 32):
         return RateLimitError(message)
 
-    # Authentication errors
-    if code == 190 or "OAuthException" in error_type:
-        return AuthenticationError(message)
+    # Validation errors — check BEFORE OAuthException because Meta often wraps
+    # code-100 "Invalid parameter" errors with type "OAuthException"
+    if code == 100:
+        return ValidationError(message)
 
     # Permission errors
     if code in (200, 10):
         return PermissionError(message, code=code)
 
-    # Validation errors
-    if code == 100:
-        return ValidationError(message)
+    # Authentication errors (code 190, or OAuthException without a more specific code)
+    if code == 190 or "OAuthException" in error_type:
+        return AuthenticationError(message)
 
     # Not found
     if code == 803 or subcode == 33:
