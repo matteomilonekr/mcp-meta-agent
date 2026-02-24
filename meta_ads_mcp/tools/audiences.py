@@ -6,7 +6,7 @@ import json
 import logging
 from typing import Any
 
-from mcp_use.server import Context
+from fastmcp import Context
 
 logger = logging.getLogger(__name__)
 

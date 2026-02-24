@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import logging
 
-from mcp_use.server import Context
+from fastmcp import Context
 
 logger = logging.getLogger(__name__)
 
