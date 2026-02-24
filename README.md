@@ -35,6 +35,16 @@ export META_ACCESS_TOKEN="il_tuo_token"
 # Opzionale (per flussi OAuth)
 export META_APP_ID="il_tuo_app_id"
 export META_APP_SECRET="il_tuo_app_secret"
+
+# Per analisi creative (immagini e video via OpenRouter)
+export OPENROUTER_API_KEY="la_tua_chiave_openrouter"
+```
+
+Oppure crea un file `.env` nella root del progetto:
+
+```env
+META_ACCESS_TOKEN=il_tuo_token
+OPENROUTER_API_KEY=la_tua_chiave_openrouter
 ```
 
 ### 3. Avvio
